@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import { Logger } from "@/app/utils/logger";
+
+const logger = new Logger("generate");
 
 export async function POST(request: Request) {
   try {
@@ -19,7 +22,7 @@ export async function POST(request: Request) {
       message: `Received: ${text}`,
     });
   } catch (error) {
-    console.error(error);
+    logger.error(`Failed to process request: ${error}`);
     return NextResponse.json(
       { success: false, error: "Failed to process request" },
       { status: 500 }
