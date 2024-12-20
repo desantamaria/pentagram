@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { listImages } from "../actions/neon/image";
 import { Session } from "next-auth";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface ImageGeneratorProps {
   generateImage: (
@@ -89,13 +91,9 @@ export default function ImageGenerator({
     <div className="min-h-screen flex flex-col justify-between p-8">
       <main className="flex-1">
         {/* Main content can go here */}
-
-        <Link
-          href="/api/auth/signout"
-          className="mt-4 inline-block rounded border p-2"
-        >
-          Sign Out
-        </Link>
+        <Button asChild>
+          <Link href="/api/auth/signout">Sign Out</Link>
+        </Button>
 
         <h1>Welcome {session.user?.email}</h1>
 
@@ -130,22 +128,24 @@ export default function ImageGenerator({
 
       <footer className="w-full max-w-3xl mx-auto">
         <form onSubmit={handleSubmit} className="w-full">
-          <div className="flex gap-2">
-            <input
+          <div className="flex gap-2 items-center">
+            <Input
               type="text"
               value={inputText}
               onChange={e => setInputText(e.target.value)}
-              className="flex-1 p-3 rounded-lg bg-black/[.05] dark:bg-white/[.06] border border-black/[.08] dark:border-white/[.145] focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
               placeholder="Describe the image you want to generate..."
               disabled={isLoading}
-            />
-            <button
+            ></Input>
+
+            <Button
               type="submit"
               disabled={isLoading || !inputText.trim()}
-              className="px-6 py-3 rounded-lg bg-foreground text-background hover:bg-[#383838] dark:hover:bg-[#ccc] transition-colors disabled:opacity-50"
+              className="text-white relative bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 
+              bg-[size:200%_auto] hover:bg-[position:100%_0] motion-safe:transition-[background-position] 
+              motion-safe:duration-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2"
             >
               {isLoading ? "Generating..." : "Generate"}
-            </button>
+            </Button>
           </div>
         </form>
       </footer>
