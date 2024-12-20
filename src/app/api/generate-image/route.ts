@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const response = await fetch(url.toString(), {
       method: "GET",
       headers: {
-        "X-API-KEY": process.env.API_KEY || "",
+        "X-API-KEY": process.env.MODAL_API_KEY || "",
         Accept: "image/jpeg",
       },
     });
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: blob.url,
+      imageUrl: blob.url,
     });
   } catch (error) {
     logger.error(`Failed to process request: ${error}`);
