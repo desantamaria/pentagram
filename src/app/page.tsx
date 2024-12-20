@@ -21,7 +21,7 @@ export default async function Home() {
         </>
       ) : (
         <>
-          <ImageGenerator generateImage={generateImage} />
+          <ImageGenerator generateImage={generateImage} session={session} />
           {/* <a href="/api/auth/signout" className="mt-4 inline-block rounded border p-2">
               Sign Out
             </a> */}

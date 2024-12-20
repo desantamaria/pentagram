@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL,
   name VARCHAR(255),
-  email VARCHAR(255),
+  email VARCHAR(255) UNIQUE,
   "emailVerified" TIMESTAMPTZ,
   image TEXT,
   PRIMARY KEY (id)
@@ -45,6 +45,6 @@ CREATE TABLE IF NOT EXISTS images (
   url TEXT NOT NULL,
   latency REAL,
   prompt TEXT,
-  userid INTEGER NOT NULL,
-  FOREIGN KEY (userid) REFERENCES users(id)
+  username TEXT NOT NULL,
+  FOREIGN KEY (username) REFERENCES users(email)
 );
