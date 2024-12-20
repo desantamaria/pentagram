@@ -89,6 +89,13 @@ export default function ImageGenerator({
       <main className="flex-1">
         {/* Main content can go here */}
 
+        <a
+          href="/api/auth/signout"
+          className="mt-4 inline-block rounded border p-2"
+        >
+          Sign Out
+        </a>
+
         <h1>Welcome {session.user?.email}</h1>
 
         {error && (
