@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { listImages } from "../actions/neon/image";
 import { Session } from "next-auth";
+import Link from "next/link";
 
 interface ImageGeneratorProps {
   generateImage: (
@@ -89,12 +90,12 @@ export default function ImageGenerator({
       <main className="flex-1">
         {/* Main content can go here */}
 
-        <a
+        <Link
           href="/api/auth/signout"
           className="mt-4 inline-block rounded border p-2"
         >
           Sign Out
-        </a>
+        </Link>
 
         <h1>Welcome {session.user?.email}</h1>
 
