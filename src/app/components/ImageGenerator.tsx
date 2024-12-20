@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { listImages } from "../actions/neon/image";
 
 interface ImageGeneratorProps {
   generateImage: (text: string) => Promise<{
@@ -10,11 +11,34 @@ interface ImageGeneratorProps {
   }>;
 }
 
+interface Image {
+  id: number;
+  url: string;
+  latency?: number;
+  prompt?: string;
+  userId?: number;
+}
+
 export default function ImageGenerator({ generateImage }: ImageGeneratorProps) {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const [images, setImages] = useState<Image[]>([]);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const imagesData = (await listImages()) as Image[];
+        setImages(imagesData);
+        console.log(imagesData);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    };
+    fetchImages();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,13 +86,16 @@ export default function ImageGenerator({ generateImage }: ImageGeneratorProps) {
           </div>
         )}
 
-        {imageUrl && (
+        {images.length > 0 && (
           <div className="w-full max-w-2xl rounded-lg overflow-hidden shadow-lg">
-            <img
-              src={imageUrl}
-              alt="Generated artwork"
-              className="w-full h-auto"
-            ></img>
+            {images.map(image => (
+              <img
+                key={image.id}
+                src={image.url}
+                alt={`Generated artwork ${image.url}`}
+                className="w-1/3 h-auto"
+              ></img>
+            ))}
           </div>
         )}
 
