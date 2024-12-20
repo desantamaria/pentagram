@@ -22,7 +22,6 @@ interface Image {
 export default function ImageGenerator({ generateImage }: ImageGeneratorProps) {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const [images, setImages] = useState<Image[]>([]);
@@ -43,7 +42,6 @@ export default function ImageGenerator({ generateImage }: ImageGeneratorProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setImageUrl(null);
     setError(null);
 
     try {
@@ -57,7 +55,7 @@ export default function ImageGenerator({ generateImage }: ImageGeneratorProps) {
         const img = new Image();
         const url = result.imageUrl;
         img.onload = () => {
-          setImageUrl(url);
+          setImages(prevImages => [...prevImages, { id: Date.now(), url }]);
         };
         img.src = url;
       } else {
