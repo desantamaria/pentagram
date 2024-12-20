@@ -1,25 +1,50 @@
 import { NextResponse } from "next/server";
 import { Logger } from "@/app/utils/logger";
+import { put } from "@vercel/blob/client";
 
 const logger = new Logger("generate");
 
 export async function POST(request: Request) {
   try {
+    // Retrieve Prompt
     const body = await request.json();
     const { text } = body;
 
-    // TODO: Call your Image Generation API here
-    // For now, we'll just echo back the text
+    const url = new URL(process.env.MODAL_URL || "");
+    url.searchParams.set("prompt", text);
 
-    fetch(
-      "https://desantamaria--example-text-to-image-inference-web-dev.modal.run"
-    )
-      .then(response => response.json())
-      .then(data => console.log(data));
+    logger.info(`Fetching response from Modal: ${url.toString()}`);
+    const response = await fetch(url.toString(), {
+      method: "GET",
+      headers: {
+        "X-API-KEY": process.env.API_KEY || "",
+        Accept: "image/jpeg",
+      },
+    });
+
+    // Error Handling
+    if (!response.ok) {
+      const errorText = await response.text();
+      logger.error(`API Response: ${errorText}`);
+      throw new Error(
+        `HTTP error status: ${response.status} message: ${errorText}`
+      );
+    }
+
+    // Upload Image to Vercel Blob
+    const imageBuffer = await response.arrayBuffer();
+    const filename = `${crypto.randomUUID()}.jpg`;
+    logger.info(`Uploading image to vercel blob: ${filename}`);
+    const blob = await put(filename, imageBuffer, {
+      access: "public",
+      contentType: "image/jpeg",
+      token: filename,
+    });
+    logger.info(`Image successfully uploaded: ${filename}`);
 
     return NextResponse.json({
       success: true,
-      message: `Received: ${text}`,
+      message: blob.url,
     });
   } catch (error) {
     logger.error(`Failed to process request: ${error}`);
