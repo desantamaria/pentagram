@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Logger } from "@/app/utils/logger";
 import { put } from "@vercel/blob";
+import { createImage } from "@/app/actions/neon/image";
 
 const logger = new Logger("generate");
 
@@ -41,6 +42,10 @@ export async function POST(request: Request) {
       token: process.env.BLOB_READ_WRITE_TOKEN,
     });
     logger.info(`Image successfully uploaded: ${blob.url}`);
+
+    // Create Entry in Neon Database
+    logger.info(`Creating Database entry for: ${blob.url}`);
+    createImage(blob.url);
 
     return NextResponse.json({
       success: true,
