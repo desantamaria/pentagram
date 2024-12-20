@@ -2,9 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { listImages } from "../actions/neon/image";
+import { Session } from "next-auth";
+import Link from "next/link";
 
 interface ImageGeneratorProps {
-  generateImage: (text: string) => Promise<{
+  generateImage: (
+    text: string,
+    username: string
+  ) => Promise<{
     success: boolean;
     imageUrl?: string;
     error?: string;
@@ -16,10 +21,13 @@ interface Image {
   url: string;
   latency?: number;
   prompt?: string;
-  userId?: number;
+  user_id?: number;
 }
 
-export default function ImageGenerator({ generateImage }: ImageGeneratorProps) {
+export default function ImageGenerator({
+  generateImage,
+  session,
+}: ImageGeneratorProps & { session: Session }) {
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +53,11 @@ export default function ImageGenerator({ generateImage }: ImageGeneratorProps) {
     setError(null);
 
     try {
-      const result = await generateImage(inputText);
+      if (!session.user?.email) {
+        throw new Error("No Email Provided");
+      }
+
+      const result = await generateImage(inputText, session.user?.email);
 
       if (!result.success) {
         throw new Error(result.error || "Failed to generate image");
@@ -77,6 +89,15 @@ export default function ImageGenerator({ generateImage }: ImageGeneratorProps) {
     <div className="min-h-screen flex flex-col justify-between p-8">
       <main className="flex-1">
         {/* Main content can go here */}
+
+        <Link
+          href="/api/auth/signout"
+          className="mt-4 inline-block rounded border p-2"
+        >
+          Sign Out
+        </Link>
+
+        <h1>Welcome {session.user?.email}</h1>
 
         {error && (
           <div className="w-full max-w-2xl bg-red-50 border border-red-200 rounded-lg">

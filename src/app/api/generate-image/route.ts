@@ -7,9 +7,11 @@ const logger = new Logger("generate");
 
 export async function POST(request: Request) {
   try {
+    const startTime = performance.now();
+
     // Retrieve Prompt
     const body = await request.json();
-    const { text } = body;
+    const { text, username } = body;
 
     const url = new URL(process.env.MODAL_URL || "");
     url.searchParams.set("prompt", text);
@@ -45,7 +47,12 @@ export async function POST(request: Request) {
 
     // Create Entry in Neon Database
     logger.info(`Creating Database entry for: ${blob.url}`);
-    createImage(blob.url);
+    createImage(
+      blob.url,
+      text,
+      username,
+      (performance.now() - startTime) / 1000
+    );
 
     return NextResponse.json({
       success: true,
