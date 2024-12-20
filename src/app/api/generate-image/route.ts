@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Logger } from "@/app/utils/logger";
-import { put } from "@vercel/blob/client";
+import { put } from "@vercel/blob";
 
 const logger = new Logger("generate");
 
@@ -38,9 +38,9 @@ export async function POST(request: Request) {
     const blob = await put(filename, imageBuffer, {
       access: "public",
       contentType: "image/jpeg",
-      token: filename,
+      token: process.env.BLOB_READ_WRITE_TOKEN,
     });
-    logger.info(`Image successfully uploaded: ${filename}`);
+    logger.info(`Image successfully uploaded: ${blob.url}`);
 
     return NextResponse.json({
       success: true,
