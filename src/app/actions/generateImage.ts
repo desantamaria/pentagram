@@ -4,6 +4,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 export async function generateImage(text: string, username: string) {
   try {
+    console.log(API_URL);
     const response = await fetch(`${API_URL}/api/generate-image`, {
       method: "POST",
       headers: {
