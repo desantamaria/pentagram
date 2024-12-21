@@ -22,3 +22,10 @@ export async function listImages() {
   const result = await sql("SELECT * FROM images");
   return result;
 }
+
+export async function getImage(url: string) {
+  const sql = neon(`${process.env.DATABASE_URL}`);
+  // Retrieve a specific image from the Postgres database by URL
+  const result = await sql("SELECT * FROM images WHERE url = $1", [url]);
+  return result;
+}

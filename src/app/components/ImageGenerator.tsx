@@ -1,11 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { listImages } from "../actions/neon/image";
+import { getImage, listImages } from "../actions/neon/image";
 import { Session } from "next-auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface ImageGeneratorProps {
   generateImage: (
@@ -23,7 +31,7 @@ interface Image {
   url: string;
   latency?: number;
   prompt?: string;
-  user_id?: number;
+  username?: string;
 }
 
 export default function ImageGenerator({
@@ -40,7 +48,6 @@ export default function ImageGenerator({
       try {
         const imagesData = (await listImages()) as Image[];
         setImages(imagesData);
-        console.log(imagesData);
       } catch (error) {
         console.error("Error fetching images:", error);
       }
@@ -143,11 +150,7 @@ export default function ImageGenerator({
             <div className="grid grid-cols-2 gap-4 w-full max-w-2xl">
               {images.map(image => (
                 <div key={image.id} className="relative group">
-                  <img
-                    src={image.url}
-                    alt={`Generated artwork ${image.url}`}
-                    className="w-full h-auto rounded-lg transition-all duration-300 ease-in-out transform group-hover:scale-105 group-hover:shadow-xl hover:cursor-pointer"
-                  />
+                  <ImageModal imageUrl={image.url} />
                 </div>
               ))}
             </div>
@@ -185,5 +188,50 @@ export default function ImageGenerator({
         </form>
       </footer>
     </div>
+  );
+}
+
+function ImageModal({ imageUrl }: { imageUrl: string }) {
+  const [image, setImage] = useState<Image | null>(null);
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const imageData = (await getImage(imageUrl)) as Image[];
+        setImage(imageData[0]);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
+    };
+    fetchImage();
+  }, []);
+
+  return (
+    <Dialog>
+      <DialogTrigger>
+        <img
+          src={imageUrl}
+          alt={`Generated artwork ${imageUrl}`}
+          className="w-full h-auto rounded-lg transition-all duration-300 ease-in-out transform group-hover:scale-105 group-hover:shadow-xl hover:cursor-pointer"
+        />
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{image?.username}</DialogTitle>
+          <DialogDescription></DialogDescription>
+        </DialogHeader>
+
+        <div className="flex gap-2">
+          <img
+            src={imageUrl}
+            alt={`Generated artwork ${imageUrl}`}
+            className="w-full h-auto rounded-lg transition-all duration-300 ease-in-out transform group-hover:scale-105 group-hover:shadow-xl hover:cursor-pointer"
+          />
+          <div>
+            <p>Prompt Used: {image?.prompt}</p>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
