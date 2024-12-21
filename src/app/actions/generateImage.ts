@@ -1,8 +1,10 @@
 "use server";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+
 export async function generateImage(text: string, username: string) {
   try {
-    const response = await fetch("http://localhost:3000/api/generate-image", {
+    const response = await fetch(`${API_URL}/api/generate-image`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
