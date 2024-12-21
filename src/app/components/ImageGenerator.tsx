@@ -69,7 +69,7 @@ export default function ImageGenerator({
         const img = new Image();
         const url = result.imageUrl;
         img.onload = () => {
-          setImages(prevImages => [...prevImages, { id: Date.now(), url }]);
+          setImages(prevImages => [{ id: Date.now(), url }, ...prevImages]);
         };
         img.src = url;
       } else {
@@ -93,10 +93,12 @@ export default function ImageGenerator({
         {/* Main content can go here */}
 
         <div className="flex justify-between items-center gap-2 mb-10">
-          <h1 className="scroll-m-20 text-1xl font-extrabold tracking-tight lg:text-2xl">
-            Pentagram
-          </h1>
-
+          <div className="flex items-center gap-2">
+            <h1 className="scroll-m-20 text-1xl font-extrabold tracking-tight lg:text-2xl">
+              Pentagram
+            </h1>
+            <img src="/logo.png" alt="Logo" width={30} height={30}></img>
+          </div>
           <div className="flex justify-end items-center gap-2">
             <h1>
               Welcome{" "}

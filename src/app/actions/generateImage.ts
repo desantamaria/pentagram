@@ -6,7 +6,7 @@ export async function generateImage(text: string, username: string) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-API-SECRET": process.env.MODAL_API_KEY || "",
+        "X-API-Key": process.env.MODAL_API_KEY || "",
       },
       body: JSON.stringify({ text: text, username: username }),
     });

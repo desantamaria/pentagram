@@ -5,6 +5,7 @@ import { generateImage } from "./actions/generateImage";
 import ImageGenerator from "./components/ImageGenerator";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default async function Home() {
   const session = await auth();
@@ -13,9 +14,13 @@ export default async function Home() {
       {!session ? (
         <>
           <div className="h-screen w-screen bg-gradient-to-l from-gray-200 via-fuchsia-200 to-stone-100 flex flex-col justify-center items-center">
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-              Welcome to the Pentagram
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                Welcome to the Pentagram
+              </h1>
+              <Image src="/logo.png" alt="Logo" width={45} height={45}></Image>
+            </div>
+
             <p className="leading-7 [&:not(:first-child)]:mt-6 mb-3">
               Please sign in to access.
             </p>
