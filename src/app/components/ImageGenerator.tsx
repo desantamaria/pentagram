@@ -215,20 +215,48 @@ function ImageModal({ imageUrl }: { imageUrl: string }) {
           className="w-full h-auto rounded-lg transition-all duration-300 ease-in-out transform group-hover:scale-105 group-hover:shadow-xl hover:cursor-pointer"
         />
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>{image?.username}</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <DialogTitle className="text-xl font-bold">Image Details</DialogTitle>
         </DialogHeader>
 
-        <div className="flex gap-2">
-          <img
-            src={imageUrl}
-            alt={`Generated artwork ${imageUrl}`}
-            className="w-full h-auto rounded-lg transition-all duration-300 ease-in-out transform group-hover:scale-105 group-hover:shadow-xl hover:cursor-pointer"
-          />
-          <div>
-            <p>Prompt Used: {image?.prompt}</p>
+        <div className="grid grid-cols-2 gap-6">
+          <div className="flex items-center">
+            <img
+              src={imageUrl}
+              alt={`Generated artwork ${imageUrl}`}
+              className="w-full h-auto rounded-lg shadow-md"
+            />
+          </div>
+
+          <div className="flex flex-col space-y-4">
+            <div className="space-y-2">
+              <h3 className="font-semibold text-gray-800">Created by</h3>
+              <p className="text-gray-600">{image?.username || "Anonymous"}</p>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="font-semibold text-gray-800">Prompt</h3>
+              <p className="text-gray-600 break-words">
+                {image?.prompt || "No prompt available"}
+              </p>
+            </div>
+
+            {image?.latency && (
+              <div className="space-y-2">
+                <h3 className="font-semibold text-gray-800">Generation Time</h3>
+                <p className="text-gray-600">
+                  {image.latency.toFixed(2)} seconds
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <h3 className="font-semibold text-gray-800">Image ID</h3>
+              <p className="text-gray-600 font-mono text-sm">
+                {image?.id || "Unknown"}
+              </p>
+            </div>
           </div>
         </div>
       </DialogContent>
