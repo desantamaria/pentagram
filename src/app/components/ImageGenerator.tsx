@@ -92,33 +92,39 @@ export default function ImageGenerator({
       <main className="flex-1">
         {/* Main content can go here */}
 
-        <div className="flex justify-end items-center gap-2 mb-10">
-          <h1>
-            Welcome{" "}
-            <span className="text-purple-500">{session.user?.email}</span>{" "}
+        <div className="flex justify-between items-center gap-2 mb-10">
+          <h1 className="scroll-m-20 text-1xl font-extrabold tracking-tight lg:text-2xl">
+            Pentagram
           </h1>
-          <Button asChild>
-            <Link
-              href="/api/auth/signout"
-              className="text-white relative bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 
+
+          <div className="flex justify-end items-center gap-2">
+            <h1>
+              Welcome{" "}
+              <span className="text-purple-500">{session.user?.email}</span>{" "}
+            </h1>
+            <Button asChild>
+              <Link
+                href="/api/auth/signout"
+                className="text-white relative bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 
               bg-[size:200%_auto] hover:bg-[position:100%_0] motion-safe:transition-[background-position] 
               motion-safe:duration-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2"
-            >
-              Sign Out
-            </Link>
-          </Button>
+              >
+                Sign Out
+              </Link>
+            </Button>
+          </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-3 overflow-scroll">
+        <div className="h-[80vh] flex flex-col items-center justify-center gap-3 overflow-scroll">
           {images.length > 0 && (
-            <div className="w-1/2 max-w-2xl rounded-lg overflow-hidden shadow-lg">
+            <div className="grid grid-cols-2 gap-4 w-full max-w-2xl">
               {images.map(image => (
                 <img
                   key={image.id}
                   src={image.url}
                   alt={`Generated artwork ${image.url}`}
-                  className="w-full h-auto"
-                ></img>
+                  className="w-full h-auto rounded-lg"
+                />
               ))}
             </div>
           )}
