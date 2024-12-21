@@ -11,7 +11,7 @@ export default async function Home() {
   const session = await auth();
   return (
     <>
-      {!session ? (
+      {!session?.user?.email ? (
         <>
           <div className="h-screen w-screen bg-gradient-to-l from-gray-200 via-fuchsia-200 to-stone-100 flex flex-col justify-center items-center">
             <div className="flex items-center gap-2">
