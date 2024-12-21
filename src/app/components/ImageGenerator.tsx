@@ -1,20 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getImage, listImages, updateLikes } from "../actions/neon/image";
-import { Session } from "next-auth";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { ThumbsUp } from "lucide-react";
+import { Session } from "next-auth";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getImage, listImages, updateLikes } from "../actions/neon/image";
 
 interface ImageGeneratorProps {
   generateImage: (
