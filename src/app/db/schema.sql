@@ -46,5 +46,6 @@ CREATE TABLE IF NOT EXISTS images (
   latency REAL,
   prompt TEXT,
   username TEXT NOT NULL,
+  likes INTEGER,
   FOREIGN KEY (username) REFERENCES users(email)
 );

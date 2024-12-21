@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getImage, listImages } from "../actions/neon/image";
+import { getImage, listImages, updateLikes } from "../actions/neon/image";
 import { Session } from "next-auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ThumbsUp } from "lucide-react";
 
 interface ImageGeneratorProps {
   generateImage: (
@@ -32,6 +33,7 @@ interface Image {
   latency?: number;
   prompt?: string;
   username?: string;
+  likes?: number;
 }
 
 export default function ImageGenerator({
@@ -193,12 +195,19 @@ export default function ImageGenerator({
 
 function ImageModal({ imageUrl }: { imageUrl: string }) {
   const [image, setImage] = useState<Image | null>(null);
+  const [likes, setLikes] = useState(0);
+
+  function handleLike() {
+    setLikes(likes + 1);
+    updateLikes(image?.url || "", likes + 1);
+  }
 
   useEffect(() => {
     const fetchImage = async () => {
       try {
         const imageData = (await getImage(imageUrl)) as Image[];
         setImage(imageData[0]);
+        setLikes(imageData[0].likes || 0);
       } catch (error) {
         console.error("Error fetching images:", error);
       }
@@ -230,6 +239,19 @@ function ImageModal({ imageUrl }: { imageUrl: string }) {
           </div>
 
           <div className="flex flex-col space-y-4">
+            <div className="flex gap-2 items-center">
+              <Button
+                onClick={handleLike}
+                size="icon"
+                className="text-white relative bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 
+              bg-[size:200%_auto] hover:bg-[position:100%_0] motion-safe:transition-[background-position] 
+              motion-safe:duration-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2"
+              >
+                <ThumbsUp />
+              </Button>
+
+              <h3 className="font-semibold text-purple-800">{likes || 0}</h3>
+            </div>
             <div className="space-y-2">
               <h3 className="font-semibold text-gray-800">Created by</h3>
               <p className="text-gray-600">{image?.username || "Anonymous"}</p>
@@ -250,13 +272,6 @@ function ImageModal({ imageUrl }: { imageUrl: string }) {
                 </p>
               </div>
             )}
-
-            <div className="space-y-2">
-              <h3 className="font-semibold text-gray-800">Image ID</h3>
-              <p className="text-gray-600 font-mono text-sm">
-                {image?.id || "Unknown"}
-              </p>
-            </div>
           </div>
         </div>
       </DialogContent>
